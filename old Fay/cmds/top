@@ -1,0 +1,25 @@
+//const { RichEmbed } = require("discord.js");
+
+module.exports.run = async (bot, message, args, connection) => {
+	connection.query(`SELECT * FROM user WHERE id = '${message.author.id}'`, (err, rows) => {
+		if(err) throw err; //arrête le programme en cas d'erreur
+		let sql;
+
+        sql = `SELECT xp FROM sadb.user t ORDER BY xp DESC LIMIT 15`
+        connection.query(sql) => {
+            return sql;
+        }
+        message.channel.send(sql); 
+		
+	});
+}
+
+module.exports.help = {
+	name: "top"
+}
+/*
+top 15 des gens qui ont le plus d'xp
+bot tatsu
+
+SELECT 15*
+*/

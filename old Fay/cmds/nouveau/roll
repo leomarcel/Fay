@@ -1,0 +1,46 @@
+var roller = require('roller');
+
+module.exports.run = async (bot, message, args) => {
+  var channel_id = message.channel.send;
+  var match_data = message.content.match(/^\/roll ([1-9][0-9]*)d([1-9][0-9]*)/);
+
+  if(match_data) {
+    var n_dice = parseInt(match_data[1], 10);
+    var n_sides = parseInt(match_data[2], 10);
+
+    if(n_dice > 10000) {
+      message.guild.sendMessage(channel_id, "Malheureusement pour vous, les ordinateurs ont une quantité limitée de mémoire, donc à moins que vous ne vouliez que je m'en aille, arrêtez d'envoyer des chiffres ridicules. Merci.");
+      return;
+    }
+
+    console.log("rolling " + n_dice + "d" + n_sides);
+    var dice = roller.roll(n_dice, n_sides);
+
+    var message_content = "";
+    var roll_user = message.author;
+    var sum;
+
+    if(n_dice > 1) {
+      sum = dice.reduce(function(prev, curr) {
+        return prev + curr;
+      });
+
+      message_content = roll_user.mention() + ": " + dice.join(", ") + " (" + sum + ")";
+    } else {
+      message_content = roll_user.mention() + ": " + dice[0];
+    }
+
+    if(message_content.length > 2000) {
+      var sum_message = "La longueur de la réponse dépasse la limite de longueur de message de Discord. Cependant, la somme des rolls était " + sum;
+
+      message.guild.sendMessage(channel_id, sum_message);
+      return;
+    }
+
+    message.guild.sendMessage(channel_id, message_content);
+  }
+}
+
+module.exports.help = {
+	name: "roll"
+}

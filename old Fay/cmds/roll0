@@ -1,0 +1,3 @@
+roll simple
+d'abord try number {0;100} -> roll simple
+mv number -> var max -> {0;max} -> roll d max
